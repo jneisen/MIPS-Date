@@ -78,7 +78,7 @@ return:
 	jr $ra
 #------------------------------------------
 print:	li $v0, 1
-	move $a0, $s3			# print day
+	move $a0, $s3			# print month
 	syscall
 
 	li $v0, 11
@@ -86,7 +86,7 @@ print:	li $v0, 1
 	syscall
 
 	li $v0, 1
-	move $a0, $s2			# print month
+	move $a0, $s2			# print day
 	syscall
 
 	li $v0, 11			#print '/'

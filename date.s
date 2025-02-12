@@ -34,9 +34,22 @@ main:	la $s0 start_date		# s0: start_date
 
 	ble $t3, $0, print 		# if(num_days would be <= 0): print
 	move $s2, $t3
-	addi $s3, $s3, 1		# went through one month
+	addi $s3, $s3, 1		# add one to current month
+	addi $t1, $t1, 4		# and to the address for the current month
 
+#------------------------------------------
 loop:	
+	lw $t2, ($t1)
+	
+	sub $t3, $s2, $t2		# if this month is too much, print
+	ble $t3, $0, print
+
+	move $s2, $t3			# otherwise, continue to next month
+	addi $s3, $s3, 1
+	addi $t1, $t1, 4
+	j loop
+
+#------------------------------------------
 
 print:	move $a0, $s2			# test print
 	li $v0, 1

@@ -21,12 +21,13 @@ main:	la $s0 start_date		# s0: start_date
 	la $s1 month_array		# s1: month_array
 	la $s2 num_days			# s2: num_days
 
-	lw $t0, 0($s0)			# start_date day to t0
-	lw $t1, 4($s0)			# start_date month to t1
+	lw $t0, 4($s0)			# start_date day to t0
+	lw $t1, 0($s0)			# start_date month to t1
 	
-	subi $t1, $t1, 1		# subtract one from month
+	addi $t1, $t1, -1		# subtract one from month
 	sll $t2, $t1, 2			# shift left 2, (mult by 4)
-	lw $t3, $t2($s1)		# loads the current month into $t3
+	add $t2, $t2, $s1		
+	lw $t3, ($t2)			# loads the current month into $t3
 	
 	sub $t0, $t3, $t0		# days left in current month
 

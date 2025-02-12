@@ -28,4 +28,10 @@ main:	la $s0 start_date		# s0: start_date
 	sll $t2, $t1, 2			# shift left 2, (mult by 4)
 	lw $t3, $t2($s1)		# loads the current month into $t3
 	
-	
+	sub $t0, $t3, $t0		# days left in current month
+
+	move $a0, $t0			# test print
+	li $v0, 1
+	syscall				
+	li $v0, 10
+	syscall

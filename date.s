@@ -65,14 +65,16 @@ reset:
 #------------------------------------------
 february:				# this function checks if we are in february and in a leap year
 	li $t9, 2
-	bne $s3, $t9, $ra		# if not february, go back
+	bne $s3, $t9, return		# if not february, go back
 	li $t9, 4
-	div $s5, $s5, $t9		# if not divisible by 4, go back
-	bne $low, $0, $ra
+	div $s5, $t9			# if not divisible by 4, go back
+	mflo $t9
+	bne $t9, $0, return
 
 	addi $t4, $t4, 1		#if it is, add one to t2, and go back
-	j $ra
 
+return:
+	jr $ra
 #------------------------------------------
 print:	li $v0, 1
 	move $a0, $s2			# print day

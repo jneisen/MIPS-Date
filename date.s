@@ -3,7 +3,7 @@
 month_array:	.word	31, 28, 31, 30, 31, 30, 31, 31, 30, 31
 		.word 	30, 31
 start_date:	.word	2, 12, 2025
-num_days:	.word	415
+num_days:	.word	1145
 
 # code time
 # Approach:
@@ -27,7 +27,7 @@ main:	la $s0 start_date		# s0: start_date
 
 	addi $t1, $s3, -1		# subtract one from month
 	sll $t1, $t1, 2			# shift left 2, (mult by 4)
-	add $t1, $t1, $s1		
+	add $t1, $t1, $s1		# add to beginning address
 	
 	lw $t2, ($t1)			# loads the current month into $t2
 	jal february
@@ -36,9 +36,10 @@ main:	la $s0 start_date		# s0: start_date
 	sub $t3, $s2, $t0		# num days - days left	
 
 	ble $t3, $0, print 		# if(num_days would be <= 0): print
+	
 	move $s2, $t3
-	addi $s3, $s3, 1		# add one to current month
-	addi $t1, $t1, 4		# and to the address for the current month
+	addi $s3, $s3, 1
+	addi $t1, $t1, 4
 
 #------------------------------------------
 loop:	
@@ -68,16 +69,16 @@ february:				# this function checks if we are in february and in a leap year
 	bne $s3, $t9, return		# if not february, go back
 	li $t9, 4
 	div $s5, $t9			# if not divisible by 4, go back
-	mflo $t9
+	mfhi $t9
 	bne $t9, $0, return
 
-	addi $t4, $t4, 1		#if it is, add one to t2, and go back
+	addi $t2, $t2, 1		#if it is, add one to t2, and go back
 
 return:
 	jr $ra
 #------------------------------------------
 print:	li $v0, 1
-	move $a0, $s2			# print day
+	move $a0, $s3			# print day
 	syscall
 
 	li $v0, 11
@@ -85,7 +86,7 @@ print:	li $v0, 1
 	syscall
 
 	li $v0, 1
-	move $a0, $s3			# print month
+	move $a0, $s2			# print month
 	syscall
 
 	li $v0, 11			#print '/'

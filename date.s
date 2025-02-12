@@ -24,6 +24,8 @@ main:	la $s0 start_date		# s0: start_date
 	lw $t0, 0($s0)			# start_date day to t0
 	lw $t1, 4($s0)			# start_date month to t1
 	
-	sll $t2, $t0, 2			# shift left 2, (mult by 4)
+	subi $t1, $t1, 1		# subtract one from month
+	sll $t2, $t1, 2			# shift left 2, (mult by 4)
+	lw $t3, $t2($s1)		# loads the current month into $t3
 	
 	

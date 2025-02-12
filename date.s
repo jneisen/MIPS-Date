@@ -30,11 +30,13 @@ main:	la $s0 start_date		# s0: start_date
 	lw $t2, ($t1)			# loads the current month into $t2
 	
 	sub $t0, $t2, $t0		# days left in current month
-	sub $t3, $s2, $t0		
+	sub $t3, $s2, $t0		# num days - days left	
 
-loop:
-	ble $t3, $0, print 
+	ble $t3, $0, print 		# if(num_days would be <= 0): print
+	move $s2, $t3
+	addi $s3, $s3, 1		# went through one month
 
+loop:	
 
 print:	move $a0, $s2			# test print
 	li $v0, 1

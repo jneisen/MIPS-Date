@@ -20,19 +20,26 @@ num_days:	.word	50
 main:	la $s0 start_date		# s0: start_date
 	la $s1 month_array		# s1: month_array
 	la $s2 num_days			# s2: num_days
+	lw $s3 0($s0)			# s3: month tracker
 
-	lw $t0, 4($s0)			# start_date day to t0
-	lw $t1, 0($s0)			# start_date month to t1
+	lw $t0, 4($s0)			# start_date day to $t0
 	
-	addi $t1, $t1, -1		# subtract one from month
-	sll $t2, $t1, 2			# shift left 2, (mult by 4)
-	add $t2, $t2, $s1		
-	lw $t3, ($t2)			# loads the current month into $t3
+	addi $t1, $s0, -1		# subtract one from month
+	sll $t1, $t1, 2			# shift left 2, (mult by 4)
+	add $t1, $t1, $s1		
+	lw $t2, ($t1)			# loads the current month into $t2
 	
-	sub $t0, $t3, $t0		# days left in current month
+	sub $t0, $t2, $t0		# days left in current month
+	sub $t3, $s2, $t0		
 
-	move $a0, $t0			# test print
+loop:
+	ble $t3, $0, print 
+
+
+print:	move $a0, $s2			# test print
 	li $v0, 1
 	syscall				
 	li $v0, 10
 	syscall
+
+.end main

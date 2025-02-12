@@ -21,14 +21,17 @@ main:	la $s0 start_date		# s0: start_date
 	lw $s2, ($s2)			# s2: num_days
 	lw $s3, ($s0)			# s3: month tracker
 	li $s4, 12			# s4 = 12
+	lw $s5, 8($s0)			# s5 will be the year tracker
 
 	lw $t0, 4($s0)			# start_date day to $t0
 
 	addi $t1, $s3, -1		# subtract one from month
 	sll $t1, $t1, 2			# shift left 2, (mult by 4)
 	add $t1, $t1, $s1		
-	lw $t2, ($t1)			# loads the current month into $t2
 	
+	lw $t2, ($t1)			# loads the current month into $t2
+	jal february
+
 	sub $t0, $t2, $t0		# days left in current month
 	sub $t3, $s2, $t0		# num days - days left	
 
@@ -40,6 +43,7 @@ main:	la $s0 start_date		# s0: start_date
 #------------------------------------------
 loop:	
 	lw $t2, ($t1)
+	jal february
 	
 	sub $t3, $s2, $t2		# if this month is too much, print
 	ble $t3, $0, print
@@ -53,18 +57,29 @@ loop:
 
 #------------------------------------------
 reset:
-	li $s3, 1
-	move $t1, $s1
+	li $s3, 1			# reset month
+	move $t1, $s1			# reset month index
+	addi $s5, $s5, 1		# increment year
 	j loop
 
 #------------------------------------------
+february:				# this function checks if we are in february and in a leap year
+	li $t9, 2
+	bne $s3, $t9, $ra		# if not february, go back
+	li $t9, 4
+	div $s5, $s5, $t9		# if not divisible by 4, go back
+	bne $low, $0, $ra
 
+	addi $t4, $t4, 1		#if it is, add one to t2, and go back
+	j $ra
+
+#------------------------------------------
 print:	li $v0, 1
 	move $a0, $s2			# print day
 	syscall
 
-	li $v0, 4
-	li $a0, 92			# print "/"
+	li $v0, 11
+	li $a0, 92			# print '/'
 	syscall
 
 	li $v0, 1

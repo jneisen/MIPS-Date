@@ -88,6 +88,14 @@ print:	li $v0, 1
 	move $a0, $s3			# print month
 	syscall
 
+	li $v0, 11			#print '/'
+	li $a0, 92
+	syscall
+
+	li $v0, 1			#print year
+	move $a0, $s5
+	syscall
+
 	li $v0, 10			#exit
 	syscall
 

@@ -5,7 +5,7 @@ month_array:	.word	31, 28, 31, 30, 31, 30, 31, 31, 30, 31
 # data doesn't need to be stored in longs necessarily
 
 start_date:	.word	2, 12, 2025
-num_days:	.word	50
+num_days:	.word	415
 
 # code time
 # Approach:
@@ -22,6 +22,7 @@ main:	la $s0 start_date		# s0: start_date
 	la $s2 num_days			
 	lw $s2, ($s2)			# s2: num_days
 	lw $s3, ($s0)			# s3: month tracker
+	addi $s4, $0, 12		# s4 = 12
 
 	lw $t0, 4($s0)			# start_date day to $t0
 
@@ -48,6 +49,14 @@ loop:
 	move $s2, $t3			# otherwise, continue to next month
 	addi $s3, $s3, 1
 	addi $t1, $t1, 4
+
+	bgt $s3, $s4, reset
+	j loop
+
+#------------------------------------------
+reset:
+	addi $s3, $0, 1
+	move $t1, $s1
 	j loop
 
 #------------------------------------------

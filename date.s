@@ -2,8 +2,6 @@
 .data
 month_array:	.word	31, 28, 31, 30, 31, 30, 31, 31, 30, 31
 		.word 	30, 31
-# data doesn't need to be stored in longs necessarily
-
 start_date:	.word	2, 12, 2025
 num_days:	.word	415
 
@@ -22,7 +20,7 @@ main:	la $s0 start_date		# s0: start_date
 	la $s2 num_days			
 	lw $s2, ($s2)			# s2: num_days
 	lw $s3, ($s0)			# s3: month tracker
-	addi $s4, $0, 12		# s4 = 12
+	li $s4, 12			# s4 = 12
 
 	lw $t0, 4($s0)			# start_date day to $t0
 
@@ -55,16 +53,25 @@ loop:
 
 #------------------------------------------
 reset:
-	addi $s3, $0, 1
+	li $s3, 1
 	move $t1, $s1
 	j loop
 
 #------------------------------------------
 
-print:	move $a0, $s3			# test print
+print:	li $v0, 1
+	move $a0, $s2			# print day
+	syscall
+
+	li $v0, 4
+	li $a0, 92			# print "/"
+	syscall
+
 	li $v0, 1
-	syscall				
-	li $v0, 10
+	move $a0, $s3			# print month
+	syscall
+
+	li $v0, 10			#exit
 	syscall
 
 .end main
